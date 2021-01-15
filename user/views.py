@@ -4,15 +4,14 @@ from django.views import View
 from django.http import JsonResponse
 
 from .models import User, Country
-#from .utils import login_decorator
 from my_settings import SECRET_KEY, ALGORITHM
 
 class SignUp(View):
     def post(self, request):
         data           = json.loads(request.body)
         EMAIL_REGEX    = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        PASSWORD_REGEX = '^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$' #영문,                     숫자, 8자 이상
-        USER_NAME      = '^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$' # 사용자 이름/ 영어, 한글
+        PASSWORD_REGEX = '^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$' 
+        USER_NAME      = '^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$' 
         country        = Country.objects.get(name=data['country'])
 
         try:
@@ -63,8 +62,7 @@ class SignIn(View):
         try:
             user = User.objects.get(email=data['email'])
             if User.objects.filter(email=data['email']).exists():
-                print("-----------------1---------------------")
-              
+                
                 if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
                     
                     access_token = jwt.encode({'id':user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
