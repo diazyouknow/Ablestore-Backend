@@ -40,7 +40,6 @@ class SignUp(View):
                 return JsonResponse({"message":"CODE_EXIST"}, status=409)
 
             else:
-                
                 User.objects.create(
                     name     = data['name'],
                     country  = country,
@@ -54,7 +53,6 @@ class SignUp(View):
 
         except KeyError:
             return JsonResponse({"message":"KEY_ERROR"},status=401)
-
 
 class SignIn(View):
     def post(self, request):
