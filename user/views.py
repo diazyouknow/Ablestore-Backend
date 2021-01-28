@@ -16,28 +16,28 @@ class SignUp(View):
 
         try:
             if not re.match(EMAIL_REGEX, data['email']):
-                return JsonResponse({"message":"INVALID_MAIL"},status=400)
+                return JsonResponse({"MESSAGE":"INVALID_MAIL"},status=400)
 
             if not re.match(PASSWORD_REGEX, data['password']):
-                return JsonResponse({"message":"INVALID_PASSWORD"},status=400)
+                return JsonResponse({"MESSAGE":"INVALID_PASSWORD"},status=400)
 
             if not re.match(USER_NAME, data['name']):
-                return JsonResponse({"message":"INVALID_NAME"},status=400)
+                return JsonResponse({"MESSAGE":"INVALID_NAME"},status=400)
 
             if len(data['nickname']) < 2 and len(data['nickname']) > 8:
-                return JsonResponse({"message":"INVALID_NICKNAME"},status=400)
+                return JsonResponse({"MESSAGE":"INVALID_NICKNAME"},status=400)
 
             if len(data['code']) < 2 and len(data['code']) > 8:
-                return JsonResponse({"message":"INVALID_CODE"},status=400)
+                return JsonResponse({"MESSAGE":"INVALID_CODE"},status=400)
 
             if User.objects.filter(email=data['email']).exists():
-                return JsonResponse({"message":"USER_EXIST"}, status=409)
+                return JsonResponse({"MESSAGE":"USER_EXIST"}, status=409)
 
             if User.objects.filter(nickname=data['nickname']).exists():
-                return JsonResponse({"message":"NICKNAME_EXIST"},status=409)
+                return JsonResponse({"MESSAGE":"NICKNAME_EXIST"},status=409)
             
             if User.objects.filter(code=data['code']).exists():
-                return JsonResponse({"message":"CODE_EXIST"}, status=409)
+                return JsonResponse({"MESSAGE":"CODE_EXIST"}, status=409)
 
             else:
                 User.objects.create(
@@ -49,10 +49,10 @@ class SignUp(View):
                     code     = data['code']
                 )
 
-                return JsonResponse({"message":"SUCCESS"},status=201)
+                return JsonResponse({"MESSAGE":"SUCCESS"},status=201)
 
         except KeyError:
-            return JsonResponse({"message":"KEY_ERROR"},status=401)
+            return JsonResponse({"MESSAGE":"KEY_ERROR"},status=401)
 
 class SignIn(View):
     def post(self, request):
@@ -64,13 +64,16 @@ class SignIn(View):
                 if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
                     
                     access_token = jwt.encode({'id':user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
-                    return JsonResponse({"ACCESS_TOKEN": access_token}, status=200)
+    
+                    return JsonResponse({"ACCESS_TOKEN": access_token,"USER_NICKNAME":user.nickname,"USER_ID":user.id}, status=200)
 
-                return JsonResponse({"message":"INVALID_USER"},status=401)
+                return JsonResponse({"MESSAGE":"INVALID_USER"},status=401)
 
-            return JsonResponse({"message":"INVALID_USER"},status=401)
+            return JsonResponse({"MESSAGE":"INVALID_USER"},status=401)
 
         except KeyError:
-            return JsonResponse({"message":"KEY_ERROR"},status=403)
+            return JsonResponse({"MESSAGE":"KEY_ERROR"},status=403)
         except ValueError:
-            return JsonResponse({"message":"INVALID_USER"},status=404)
+            return JsonResponse({"MESSAGE":"INVALID_USER"},status=404)
+        except User.DoesNotExist:
+            return JsonResponse({"MESSAGE":"INVALID_USER"},status=404)

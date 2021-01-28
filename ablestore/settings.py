@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'user',
     'community',
+    #'django_seed',
 ]
 
 MIDDLEWARE = [

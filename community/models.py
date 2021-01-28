@@ -36,34 +36,34 @@ class Board(models.Model):
         db_table = "boards"
 
 class BoardTag(models.Model):
-    tag = models.ForeignKey("Tag", on_delete=models.SET_NULL, null=True)
+    tag   = models.ForeignKey("Tag", on_delete=models.SET_NULL, null=True)
     board = models.ForeignKey("Board", on_delete=models.CASCADE)
      
     class Meta:
         db_table = "board_tags"
 
 class BoardLike(models.Model):
-    user = models.ForeignKey("user.User", on_delete=models.CASCADE)
+    user  = models.ForeignKey("user.User", on_delete=models.CASCADE)
     board = models.ForeignKey("Board", on_delete=models.CASCADE)
      
     class Meta:
         db_table = "board_likes"
 
 class Comment(models.Model):
-    user     = models.ForeignKey("user.User", on_delete=models.CASCADE)
-    board    = models.ForeignKey("Board", on_delete=models.CASCADE)
-    content  = models.TextField()
-    reply    = models.ForeignKey('self', on_delete = models.SET_NULL, null=True)
+    user       = models.ForeignKey("user.User", on_delete=models.CASCADE)
+    board      = models.ForeignKey("Board", on_delete=models.CASCADE)
+    content    = models.TextField()
+    reply      = models.ForeignKey('self', on_delete = models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    solution = models.BooleanField(default=False)
+    solution   = models.BooleanField(default=False)
     
     class Meta:
         db_table = "coments"
-
+ 
 class CommentLike(models.Model):
-    user = models.ForeignKey("user.User", on_delete=models.CASCADE)
-    coment = models.ForeignKey("Comment", on_delete=models.CASCADE)
+    user   = models.ForeignKey("user.User", on_delete=models.CASCADE)
+    comment = models.ForeignKey("Comment", on_delete=models.CASCADE)
      
     class Meta:
         db_table = "comment_likes"
