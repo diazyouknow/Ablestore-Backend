@@ -256,6 +256,7 @@ class BoardComment(View):
                 'code'      : comment.user.code,
                 'content'   : comment.content,
                 'created_at': comment.created_at,
+                'solution'  : comment.solution,
                 'reply'     : comment.reply_id
             }for comment in comments]
            
